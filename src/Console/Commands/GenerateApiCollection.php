@@ -10,7 +10,7 @@ use ReflectionMethod;
 
 class GenerateApiCollection extends Command
 {
-    protected $signature = 'api-client:generate-collection';
+    protected $signature = 'api-toolkit:generate';
     protected $description = 'Generate a API Client collection from your routes';
 
 
