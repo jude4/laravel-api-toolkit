@@ -1,5 +1,5 @@
 # ApiToolkit - A Laravel API Collection Generator
-
+![Downloads](https://img.shields.io/packagist/dt/judeufuoma/api-toolkit?color=blue)
 **ApiToolkit** is a Laravel package designed to generate Postman-compatible API collections from your defined routes. It will automatically generate collections with API route details, query parameters, request bodies, headers, and authentication, making API testing and documentation easy.
 
 ## Features
