@@ -165,4 +165,5 @@ class GenerateApiCollectionTest extends TestCase
         $collection = json_decode(File::get(base_path('postman_collection.json')), true);
         $this->assertEquals('api/admin/test', $collection['item'][0]['name']);
     }
+
 }
