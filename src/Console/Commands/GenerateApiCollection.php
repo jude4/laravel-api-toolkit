@@ -132,11 +132,23 @@ class GenerateApiCollection extends Command
             return null;
         }
 
+        // Try to get rules from FormRequest first
+        if ($rules = $this->getFormRequestRules($route)) {
+            $params = [];
+            foreach ($rules as $field => $rule) {
+                $params[$field] = $this->generateExampleFromRule($rule);
+            }
+            return [
+                'mode' => 'raw',
+                'raw' => json_encode($params, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES),
+            ];
+        }
+
+        // Fallback to docblock parsing
         $doc = $this->getRawDocComment($route);
         preg_match_all('/@bodyParam\s+(\w+)\s+\w+\s+(.*?)\s+(Example:\s+(.*))?$/im', $doc, $matches, PREG_SET_ORDER);
 
         $params = [];
-
         foreach ($matches as $match) {
             $key = $match[1];
             $example = $match[4] ?? 'sample_value';
@@ -168,4 +180,55 @@ class GenerateApiCollection extends Command
             return '';
         }
     }
+
+    protected function getFormRequestRules($route): ?array
+    {
+        if (!isset($route->action['controller'])) {
+            return null;
+        }
+
+        [$controller, $method] = explode('@', $route->action['controller']);
+
+        try {
+            $refMethod = new ReflectionMethod($controller, $method);
+            $parameters = $refMethod->getParameters();
+
+            foreach ($parameters as $parameter) {
+                if (
+                    $parameter->getType() &&
+                    is_subclass_of($parameter->getType()->getName(), \Illuminate\Foundation\Http\FormRequest::class)
+                ) {
+                    $requestClass = $parameter->getType()->getName();
+                    $request = new $requestClass();
+                    return $request->rules();
+                }
+            }
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return null;
+    }
+
+    protected function generateExampleFromRule($rule): mixed
+{
+    $ruleArray = is_array($rule) ? $rule : explode('|', $rule);
+
+    foreach ($ruleArray as $rule) {
+        if (str_contains($rule, 'numeric')) {
+            return 123;
+        }
+        if (str_contains($rule, 'boolean')) {
+            return true;
+        }
+        if (str_contains($rule, 'date')) {
+            return now()->toDateString();
+        }
+        if (str_contains($rule, 'email')) {
+            return 'example@test.com';
+        }
+    }
+
+    return 'example_value';
+}
 }

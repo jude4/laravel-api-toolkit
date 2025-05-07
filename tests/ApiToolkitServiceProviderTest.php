@@ -28,7 +28,7 @@ class ApiToolkitServiceProviderTest extends TestCase
     public function test_generate_api_collection_command_is_registered()
     {
         // Check if the command exists
-        $exitCode = Artisan::call('api-client:generate-collection');
+        $exitCode = Artisan::call('api-toolkit:generate');
 
         $this->assertEquals(0, $exitCode); // Exit code 0 means success
     }
