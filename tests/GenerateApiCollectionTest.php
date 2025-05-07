@@ -149,4 +149,22 @@ class GenerateApiCollectionTest extends TestCase
             ['key' => 'page', 'value' => '1']
         ], $queryParams);
     }
+
+    /** @test */
+    public function it_scans_routes_from_config()
+    {
+        config(['api-toolkit.route_files' => ['api-admin.php']]);
+
+        File::put(base_path('routes/api-admin.php'), <<<'EOT'
+    <?php
+    Route::post('api/admin/test', function () {
+        return response()->json(['admin' => true]);
+    });
+    EOT);
+
+        Artisan::call('api-toolkit:generate');
+
+        $collection = json_decode(File::get(base_path('postman_collection.json')), true);
+        $this->assertEquals('api/admin/test', $collection['item'][0]['name']);
+    }
 }
