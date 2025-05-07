@@ -15,5 +15,7 @@ class ApiToolkitServiceProvider extends PackageServiceProvider
             ->name('api-toolkit')
             ->hasConfigFile() // This registers the config file
             ->hasCommand(GenerateApiCollection::class);
+
+
     }
 }
