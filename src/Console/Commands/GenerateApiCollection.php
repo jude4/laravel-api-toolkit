@@ -16,6 +16,21 @@ class GenerateApiCollection extends Command
 
     public function handle()
     {
+        // Load configured route files
+        collect(config('api-toolkit.route_files'))
+            ->each(function ($file) {
+                $path = base_path("routes/{$file}");
+                if (file_exists($path)) {
+                    require_once $path;
+                }
+            });
+
+        $routes = collect(Route::getRoutes())->filter(function ($route) {
+            return str_starts_with(
+                $route->uri(),
+                config('api-toolkit.prefix') . '/'
+            );
+        });
         $routes = collect(Route::getRoutes())->filter(function ($route) {
             return str_starts_with($route->uri(), 'api/');
         });
@@ -211,24 +226,24 @@ class GenerateApiCollection extends Command
     }
 
     protected function generateExampleFromRule($rule): mixed
-{
-    $ruleArray = is_array($rule) ? $rule : explode('|', $rule);
+    {
+        $ruleArray = is_array($rule) ? $rule : explode('|', $rule);
 
-    foreach ($ruleArray as $rule) {
-        if (str_contains($rule, 'numeric')) {
-            return 123;
+        foreach ($ruleArray as $rule) {
+            if (str_contains($rule, 'numeric')) {
+                return 123;
+            }
+            if (str_contains($rule, 'boolean')) {
+                return true;
+            }
+            if (str_contains($rule, 'date')) {
+                return now()->toDateString();
+            }
+            if (str_contains($rule, 'email')) {
+                return 'example@test.com';
+            }
         }
-        if (str_contains($rule, 'boolean')) {
-            return true;
-        }
-        if (str_contains($rule, 'date')) {
-            return now()->toDateString();
-        }
-        if (str_contains($rule, 'email')) {
-            return 'example@test.com';
-        }
+
+        return 'example_value';
     }
-
-    return 'example_value';
-}
 }
