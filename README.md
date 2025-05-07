@@ -19,7 +19,7 @@ To install **ApiToolkit**, follow these steps:
 In your Laravel project, run:
 
 ```bash
-composer require your-vendor/api-toolkit
+composer require judeufuoma/api-toolkit
 ```
 ### 2. Generate the Postman Collection
 
