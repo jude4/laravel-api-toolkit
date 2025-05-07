@@ -1,0 +1,42 @@
+{
+    "name": "judeufuoma/api-toolkit",
+    "description": "A Laravel package that generates Postman-compatible API collections.",
+    "keywords": [
+        "laravel",
+        "api",
+        "postman",
+        "collection",
+        "generator"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jude4",
+            "email": "judeufuomao@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+        "spatie/laravel-package-tools": "^1.14",
+        "phpdocumentor/reflection-docblock": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "JudeUfuoma\\ApiToolkit\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JudeUfuoma\\ApiToolkit\\Providers\\ApiToolkitServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "require-dev": {
+        "orchestra/testbench": "^10.2"
+    }
+}
